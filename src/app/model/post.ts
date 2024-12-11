@@ -1,5 +1,8 @@
+import { ContentBlock } from "./content_block";
 export class Post{
-    name!:string;
-    content!:string;
+    title!:string;
+    code!:string;
+    description!:string;
+    contentBlock!:ContentBlock[];
     date!:Date;
 }

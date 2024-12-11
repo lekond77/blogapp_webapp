@@ -1,0 +1,8 @@
+<div class="post-card" *ngIf="post">
+    <span>{{ post.date | date:'dd MMMM yyyy'}}</span>
+    <div class="post-card-body">
+      <h3>{{ post.title }}</h3>
+      <p>{{ post.description}}</p>
+    </div>
+    <button class="view-post-button" (click)="onViewPost()">Voir</button>
+</div>
