@@ -22,4 +22,8 @@ export class PostComponent {
     this.router.navigateByUrl(`posts/${buildUrl}`);
   }
 
+  onEditPost(){
+    this.router.navigate([`posts/edit/${this.post.code}`])
+  }
+
 }

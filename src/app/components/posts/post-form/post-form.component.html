@@ -1,10 +1,11 @@
 <form [formGroup]="postForm">
-    <div>
-        <label for="title">Title</label>
-        <input type="text" formControlName="title" id="title">
+    <div class="input-contain">
+        <label for="title">Title</label><br>
+        <input type="text"  id="title" formControlName="title">
     </div>
-    <div>
-        <label for="description">Description</label>
-       <textarea formControlName="description" id="description"></textarea>
+    <div class="input-contain">
+       <label for="description">Description</label><br>
+       <textarea  id="description" formControlName="description" rows="5"></textarea>
     </div>
+    <button type="submit">{{ post ? 'Modifier' : 'Ajouter' }}</button>
 </form>

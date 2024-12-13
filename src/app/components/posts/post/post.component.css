@@ -22,13 +22,16 @@ span{
     padding: 3px;
 }
 .view-post-button{
-    position: absolute;
-    bottom: 10px;
     right: 10px;
-    padding: 10px;
     background-color: rgb(121, 201, 174);
-    border-radius: 5px;
-    border: none;
+}
+
+.edit-post-button, .view-post-button{
+    position: absolute;
     width: 30%;
-    cursor: pointer;
+    bottom: 2px;
+}
+.edit-post-button{
+    left: 10px;
+    background-color: rgb(226, 238, 204);
 }

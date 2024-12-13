@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Post } from '../model/post';
 import { API_CONFIG } from '../config/api.config';
 
@@ -10,8 +10,14 @@ import { API_CONFIG } from '../config/api.config';
 export class PostService {
 
   private apiUrl = API_CONFIG.apiUrl;
+
+  private postToEdit$ = new BehaviorSubject<Post|null>(null);
+
   constructor(private http:HttpClient) {}
 
+  setPostEdit(post:Post | null):void{
+    this.postToEdit$.next(post);
+  }
   //Gat all post
   getPosts():Observable<Post[]>{
     return this.http.get<Post[]>(`${this.apiUrl}/posts`);
