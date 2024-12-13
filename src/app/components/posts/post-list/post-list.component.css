@@ -2,3 +2,9 @@
     display: flex;
     flex-wrap: wrap;
 }
+
+button{
+    border-color:rgb(121, 201, 174);
+    background-color: rgb(121, 201, 174);
+    margin-bottom: 10px;
+}

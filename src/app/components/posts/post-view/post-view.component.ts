@@ -15,13 +15,12 @@ export class PostViewComponent implements OnInit{
 
   post$!:Observable<Post>;
   code!:string;
-  constructor(private activatedRoute:ActivatedRoute, private router:Router, private postService:PostService){}
+  constructor(private activatedRoute:ActivatedRoute, private postService:PostService){}
 
   ngOnInit(): void {
-    const routerParam = this.activatedRoute.snapshot.params['id'].split("-");
+    const routerParam = this.activatedRoute.snapshot.params['code'].split("-");
     this.code = routerParam[0];
     this.post$ = this.postService.getPost(this.code);
-    console.log(this.code);
   }
 
 }
