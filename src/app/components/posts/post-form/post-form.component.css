@@ -6,11 +6,90 @@ button{
 .input-contain{
     margin-bottom: 1.5rem;
 }
-input, textarea{
-    width: 60%;
+
+.form-content{
+    width: 80%;
+    margin: auto;
+}
+input, textarea, select{
     padding: 10px;
     font-size: 16px;
 }
+#title, #description{
+    width: 100%;
+}
 label{
     font-size: 18px;
+}
+
+.form-feedback{
+    background-color: green;
+    padding: 10px;
+    font-size: 18px;
+    width: 60%;
+    margin-bottom: 1.5rem;
+    color: aliceblue;
+}
+
+.deleteBtn{
+    background-color:rgb(231, 183, 193);
+    margin-left: 2rem;
+}
+
+.content-bloc{
+    position: relative;
+    padding: 10px;
+    border: 0.5px solid rgba(238, 241, 241, 0.819);
+    margin-bottom: 7px;
+}
+.content-bloc .delete-bloc{
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: rgb(219, 137, 137);
+    padding: 3px;
+    border-radius: 3px;
+    justify-content: right;
+}
+.content-bloc input, textarea{
+   width: 95%;
+}
+
+.content{
+    width: 93%;
+    position: relative;
+    border: 1px solid rgba(169, 177, 176, 0.447);
+    border-radius: 2px;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.content .delete-content{
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 2px;
+    background-color: bisque;
+    border-radius: 3px;
+}
+.add-content{
+    background-color: aquamarine;
+    padding: 5px;
+}
+span{
+    cursor: pointer;
+    border-radius: 3px;
+}
+.add-bloc{
+    background-color: rgba(146, 179, 182, 0.947);
+    padding: 5px;
+    justify-content: end;
+}
+.add-div{
+    display: flex; 
+    justify-content:end;
+    margin-bottom: 5px;
+}
+select{
+    width: 100%;
 }

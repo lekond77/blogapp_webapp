@@ -1,11 +1,66 @@
-<form [formGroup]="postForm">
-    <div class="input-contain">
-        <label for="title">Title</label><br>
-        <input type="text"  id="title" formControlName="title">
-    </div>
-    <div class="input-contain">
-       <label for="description">Description</label><br>
-       <textarea  id="description" formControlName="description" rows="5"></textarea>
-    </div>
-    <button type="submit">{{ post ? 'Modifier' : 'Ajouter' }}</button>
-</form>
+<div class="form-content">
+    <div class="form-feedback" *ngIf="formFeedback">{{ formFeedback }}</div>
+    <form [formGroup]="postForm">
+        <div class="input-contain">
+            <label for="title">Title</label><br>
+            <input type="text"  id="title" formControlName="title">
+        </div>
+        <div class="input-contain">
+           <label for="description">Description</label><br>
+           <textarea  id="description" formControlName="description" rows="5"></textarea>
+        </div>
+
+        <div formArrayName="contentBlock" >
+            <div *ngFor="let contentBlock of contentBlocks.controls; let l=index" class="content-bloc"
+                 [formGroupName]="l">
+                 <span class="delete-bloc" (click)="onDeleteBlock(l)"> Supprimer le bloc</span>
+                <div class="input-contain">
+                    <label for="contentBlockTitle{{l}}">Title du bloc</label><br>
+                    <input id="'contentBlockTitle{{l}}'" formControlName="title" type="text" class="content-bloc-title"/>
+                </div>
+                <div formArrayName="contents" >
+                    <div *ngFor="let content of getContents(l).controls; let j = index" [formGroupName]="j" class="content">
+                        <span class="delete-content" (click)="onDeleteContent(l,j)"> Supprimer</span>
+                        <div class="input-contain">
+                            <label for="type">Type</label><br>
+                            <select formControlName="type">
+                                <option value="text">Text</option>
+                                <option value="image">Image</option>
+                                <option value="list">List d'éléments</option>
+                            </select>
+                        </div>
+                        <div class="input-contain">
+                            <label for="value{{j}}">
+                                @if (content.get('type')?.value === 'text') {
+                                    Paragraphe
+                                }@else if (content.get('type')?.value === 'image') {
+                                    Image
+                                }@else {
+                                    List
+                                }
+                            </label><br>
+                        
+                            <input *ngIf="content.get('type')?.value === 'image'" type="file" formControlName="value{{j}}" accept="image/*" class="image-upload-input">
+                          
+                            <textarea *ngIf="content.get('type')?.value === 'text'" formControlName="value" id="value{{j}}"
+                            placeholder="Ajouter votre paragraphe"></textarea>
+    
+                            <textarea *ngIf="content.get('type')?.value === 'list'" formControlName="value" id="value{{j}}"
+                            placeholder="Entrez les éléments de la liste (séparés par des points virgules)"></textarea>
+
+                        </div>
+                        
+                    </div>
+                    <span class="add-content" (click)="addContent(l)">Ajouter du contenu</span>
+                </div>
+            </div>
+        </div>
+        <div class="add-div">
+            <span class="add-bloc" (click)="addContentBlock()">Ajouter un bloc</span>
+        </div>
+        <div>
+            <button type="submit" (click)="onSubmitForm()">{{ post ? 'Modifier' : 'Ajouter' }}</button>
+            <button *ngIf="post" (click)="onDeletePost(post.code)" class="deleteBtn">Supprimer</button>
+        </div>
+    </form>  
+</div>

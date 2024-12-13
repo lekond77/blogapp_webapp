@@ -39,8 +39,8 @@ export class PostService {
   }
 
   //Delete post by id
-  deletePost(code:string):void{
-    this.http.delete<Post>(`${this.apiUrl}/post/${code}`);
+  deletePost(code:string):Observable<any>{
+    return this.http.delete<Post>(`${this.apiUrl}/post/${code}`);
   }
 
 }
