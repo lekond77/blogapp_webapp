@@ -1,6 +1,6 @@
 <div class="form-content">
-    <div class="form-feedback" *ngIf="formFeedback">{{ formFeedback }}</div>
-    <form [formGroup]="postForm">
+    <div class="form-feedback" *ngIf="formFeedback" [ngStyle]="{'background-color': backgroundColor}">{{ formFeedback }}</div>
+    <form [formGroup]="postForm" enctype="multipart/form-data">
         <div class="input-contain">
             <label for="title">Title</label><br>
             <input type="text"  id="title" formControlName="title">
@@ -39,9 +39,10 @@
                                     List
                                 }
                             </label><br>
-                        
-                            <input *ngIf="content.get('type')?.value === 'image'" type="file" formControlName="value{{j}}" accept="image/*" class="image-upload-input">
-                          
+
+                            <input *ngIf="content.get('type')?.value === 'image'"  type="file" name="file" 
+                             accept="image/*" class="image-upload-input" id="value{{j}}" (change)="onFileChange($event, l, j)">
+
                             <textarea *ngIf="content.get('type')?.value === 'text'" formControlName="value" id="value{{j}}"
                             placeholder="Ajouter votre paragraphe"></textarea>
     
@@ -51,15 +52,15 @@
                         </div>
                         
                     </div>
-                    <span class="add-content" (click)="addContent(l)">Ajouter du contenu</span>
+                    <button class="add-content" (click)="addContent(l)">Ajouter du contenu</button>
                 </div>
             </div>
         </div>
         <div class="add-div">
-            <span class="add-bloc" (click)="addContentBlock()">Ajouter un bloc</span>
+            <button class="add-bloc" (click)="addContentBlock()">Ajouter un bloc</button>
         </div>
         <div>
-            <button type="submit" (click)="onSubmitForm()">{{ post ? 'Modifier' : 'Ajouter' }}</button>
+            <button type="submit" (click)="onSubmitForm()" [disabled]="postForm.invalid">{{ post ? 'Modifier' : 'Ajouter' }}</button>
             <button *ngIf="post" (click)="onDeletePost(post.code)" class="deleteBtn">Supprimer</button>
         </div>
     </form>  

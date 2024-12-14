@@ -29,9 +29,21 @@ export class PostService {
   }
 
   //Add new post
-  createPost(post: Post):Observable<Post>{
-    return this.http.post<Post>(`${this.apiUrl}/post`, post);
+  // createPost(post: Post):Observable<Post>{
+  //   return this.http.post<Post>(`${this.apiUrl}/post`, post);
+  // }
+
+  createPost(post: Post, files: File[]): Observable<Post> {
+    const formData: FormData = new FormData();
+    formData.append('post', new Blob([JSON.stringify(post)], { type: 'application/json' }));
+    
+    files.forEach((file, index) => {
+      formData.append('files', file, file.name);
+    });
+    
+    return this.http.post<Post>(`${this.apiUrl}/post`, formData);
   }
+  
 
   //update post
   updatePost(code:string, post:Post):Observable<Post>{

@@ -1,0 +1,14 @@
+h2{
+    text-align: center;
+    font-size: 40px;
+}
+h3{
+    font-size: 30px;
+}
+p, li{
+    font-size: 18px;
+}
+.post-image{
+    width: 70%;
+    max-height: 600px;
+}

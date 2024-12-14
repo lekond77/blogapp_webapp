@@ -1,13 +1,14 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Post } from 'src/app/model/post';
+import { SplitBySemicolonPipe } from 'src/app/pipe/splitbysemicolon.pipe';
 import { PostService } from 'src/app/service/post.service';
 
 @Component({
   selector: 'app-post-view',
-  imports: [NgIf, AsyncPipe],
+  imports: [NgIf, AsyncPipe, NgFor, SplitBySemicolonPipe],
   templateUrl: './post-view.component.html',
   styleUrl: './post-view.component.css'
 })
