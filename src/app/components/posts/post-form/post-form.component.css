@@ -23,12 +23,11 @@ label{
 }
 
 .form-feedback{
-    background-color: green;
     padding: 10px;
     font-size: 18px;
-    width: 60%;
     margin-bottom: 1.5rem;
     color: aliceblue;
+    width: 100%;
 }
 
 .deleteBtn{

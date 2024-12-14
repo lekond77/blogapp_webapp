@@ -5,147 +5,199 @@ import { catchError } from 'rxjs';
 import { Post } from 'src/app/model/post';
 import { PostService } from 'src/app/service/post.service';
 import { tap, of } from 'rxjs';
-import { NgFor, NgIf } from '@angular/common';
+import { NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
 import { Content } from 'src/app/model/content';
 
 @Component({
   selector: 'app-post-form',
-  imports: [ReactiveFormsModule, NgIf, NgFor],
+  imports: [ReactiveFormsModule, NgIf, NgFor, NgStyle],
   templateUrl: './post-form.component.html',
   styleUrl: './post-form.component.css'
 })
 export class PostFormComponent implements OnInit {
-  post?:Post;
-  postForm!:FormGroup;
-  formFeedback!:string|undefined;
-  actionText!:string;
+  post?: Post;
+  postForm!: FormGroup; 
+  formFeedback!: string | undefined; // Feedback message for form submission
+  actionText!: string; // Text to indicate the action performed (e.g., added, modified)
+  backgroundColor!:string;
 
   constructor(
-    private fb:FormBuilder,
+    private fb: FormBuilder, 
     private activatedRoute: ActivatedRoute,
-    private postService:PostService,
-    private router:Router
-  ){
-    this.initForm();
+    private postService: PostService,
+    private router: Router
+  ) {
+    this.initForm(); // Initialize the form when the component is created
   }
 
   ngOnInit(): void {
+    // Get the 'code' parameter from the route to determine if we're editing an existing post
     const code = this.activatedRoute.snapshot.params['code'];
 
-    if(code){
-      this.postService.getPost(code).subscribe(post =>{
+    if (code) {
+      // Fetch the post data from the server using the post code
+      this.postService.getPost(code).subscribe(post => {
         this.post = post;
 
+        // If the post data is successfully fetched, prefill the form with the post data
         if (this.post) {
-         this.prefillForm(this.post);
+          this.prefillForm(this.post);
         }
       });
     }
   }
-  private initForm():void{
+
+  // Initialize the form with default values and validators
+  private initForm(): void {
     this.postForm = this.fb.group({
-      title: ['', [Validators.required]],
+      title: ['', [Validators.required]], 
       description: ['', [Validators.required]],
-      contentBlock:this.fb.array([])
+      contentBlock: this.fb.array([]) // Content blocks array to hold multiple content blocks
     });
   }
 
-  prefillForm(post:Post): void {
-  
-      this.postForm.patchValue({
-        title: post.title,
-        description: post.description
-      });
-      if (post.contentBlock) {
-          post.contentBlock.forEach(contentBlock => {
-          const contentBlockGroup = this.fb.group({
-            title: [contentBlock.title, Validators.required],
-            contents: this.fb.array([])
-          });
+  // Prefill the form with the data of an existing post
+  prefillForm(post: Post): void {
+    // Set the title and description fields with the post data
+    this.postForm.patchValue({
+      title: post.title,
+      description: post.description
+    });
 
+    // If the post has content blocks, iterate through them and add them to the form
+    if (post.contentBlock) {
+      post.contentBlock.forEach(contentBlock => {
+        // Create a form group for each content block
+        const contentBlockGroup = this.fb.group({
+          title: [contentBlock.title, Validators.required],
+          contents: this.fb.array([]) 
+        });
+
+        // If the content block has contents, iterate through them and add them to the form
+        if(contentBlock.contents){
           contentBlock.contents.forEach(content => {
             this.addContentToContentBlock(contentBlockGroup, content);
           });
-
-          this.contentBlocks.push(contentBlockGroup);
-        });
-      }
-    
+        }
+        // Add the content block group to the content blocks array
+        this.contentBlocks.push(contentBlockGroup);
+      });
+    }
   }
-  
 
-  get contentBlocks():FormArray{
+  // Getter for the content blocks form array
+  get contentBlocks(): FormArray {
     return this.postForm.get('contentBlock') as FormArray;
   }
 
-  addContentBlock(){
+  // Add a new content block to the form
+  addContentBlock() {
     const contentBlock = this.fb.group({
-      title: ['', Validators.required],
-      contents: this.fb.array([])
+      title: ['', Validators.required], 
+      contents: this.fb.array([]) 
     });
 
+    // Add the new content block group to the content blocks array
     this.contentBlocks.push(contentBlock);
   }
 
-  getContents(contentBlockIndex:number):FormArray{
+  // Getter for the contents form array of a specific content block
+  getContents(contentBlockIndex: number): FormArray {
     return this.contentBlocks.at(contentBlockIndex).get('contents') as FormArray;
   }
 
-  addContentToContentBlock(contentBlockGroup:FormGroup, content?:Content){
+  // Add a new content to a specific content block
+  addContentToContentBlock(contentBlockGroup: FormGroup, content?: Content) {
     const contentsArray = contentBlockGroup.get('contents') as FormArray;
+    // Add a new content group to the contents array
     contentsArray.push(this.fb.group({
-      type:[content?.type || 'text', Validators.required],
-      value:[content?.value || '', Validators.required]
+      type: [content?.type || 'text', Validators.required], 
+      value: [content?.value || '', Validators.required] 
     }));
   }
 
+  // Add a new content to a specific content block by index
   addContent(contentBlockIndex: number): void {
     const contentsArray = this.getContents(contentBlockIndex);
+    // Add a new content group to the contents array
     contentsArray.push(this.fb.group({
-      type: ['text', Validators.required],
-      value: ['', Validators.required]
+      type: ['text', Validators.required], 
+      value: [''],
+      file:[''] 
     }));
   }
 
-  onDeleteBlock(contentBlockIndex: number){
+  // Delete a content block by index
+  onDeleteBlock(contentBlockIndex: number) {
     this.contentBlocks.removeAt(contentBlockIndex);
   }
- onDeleteContent(contentBlockIndex: number, contentIndex: number): void {
+
+  // Delete a content from a specific content block by index
+  onDeleteContent(contentBlockIndex: number, contentIndex: number): void {
     const contentsArray = this.getContents(contentBlockIndex);
     contentsArray.removeAt(contentIndex);
   }
 
-  
 
-  
-  onSubmitForm(){
-    if(this.postForm.valid){
-      const postData = this.postForm.value;
+  //
+  onFileChange(event: any, blockIndex: number, contentIndex: number) {
+    const file = event.target.files[0]; 
+    const content = this.getContents(blockIndex).at(contentIndex);
+
+    content.patchValue({ file: file });
+  }
+  // Handle form submission
+  onSubmitForm() {
+    if (this.postForm.valid) {
+      const postData = this.postForm.value; // Get the form data
 
       let request;
 
-      if(this.post){
+      // Determine if we're updating an existing post or creating a new one
+      if (this.post) {
         request = this.postService.updatePost(this.post.code, postData);
-        this.actionText = 'modifé';
-      }else{
-        request = this.postService.createPost(postData);
-        this.actionText = 'ajouté';
-        this.initForm();
+        this.actionText = 'modifié'; // Set the action text to 'Modifié'
+      } else {
+        const files: File[] = [];
+
+        this.contentBlocks.controls.forEach((block, blockIndex) => {
+          
+          const contentBlock = block.get('contents') as FormArray;
+          contentBlock.controls.forEach((content, contentIndex) => {
+            if (content.get('file')?.value) {
+              files.push(content.get('file')?.value);
+            }
+          });
+        });
+
+        console.log(files);
+
+        request = this.postService.createPost(postData, files);
+        //request = this.postService.createPost(postData);
+        this.actionText = 'ajouté'; // Set the action text to 'Ajouté'
+        //this.initForm(); // Reset the form after creating a new post
       }
 
+      
+      // Subscribe to the request to handle the response
       request.pipe(
-        tap((post) =>{
+        tap((post) => {
+          // Set the feedback message with the action text
           this.formFeedback = `Post ${this.actionText} avec succès`;
-          this.post = post;
+          this.backgroundColor = 'green'
+          this.post = post; // Update the post data
         }),
-        catchError((error) =>{
-          return of (null)
+        catchError((error) => {
+          this.formFeedback = `Une erreur s'est produite`;
+          this.backgroundColor = 'red'
+          return of(null); // Handle errors gracefully
         })
       ).subscribe();
-      
     }
   }
-  onDeletePost(code:string){
+
+  // Delete a post by code and navigate to the home page
+  onDeletePost(code: string) {
     this.postService.deletePost(code).subscribe();
     this.router.navigateByUrl('');
   }
