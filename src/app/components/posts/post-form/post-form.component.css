@@ -92,3 +92,8 @@ span{
 select{
     width: 100%;
 }
+
+.form-image{
+    width: 70px;
+    height: 70px;
+}

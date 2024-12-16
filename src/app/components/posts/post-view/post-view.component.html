@@ -12,7 +12,9 @@
                 <ul *ngIf="content.type === 'list'">
                     <li *ngFor="let item of content.value | splitBySemicolon">{{ item }}</li>
                 </ul>
-                <img *ngIf="content.type === 'image' " [src]="content.value" [alt]="contentBlock.title" class="post-image">
+               <div class="post-image-contain">
+                    <img *ngIf="content.type === 'image' " [src]="content.value" [alt]="contentBlock.title" class="post-image">
+               </div>
             </div>
         </div>
     </div>

@@ -1,6 +1,6 @@
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Post } from 'src/app/model/post';
 import { SplitBySemicolonPipe } from 'src/app/pipe/splitbysemicolon.pipe';
