@@ -13,7 +13,7 @@
         <div formArrayName="contentBlock" >
             <div *ngFor="let contentBlock of contentBlocks.controls; let l=index" class="content-bloc"
                  [formGroupName]="l">
-                 <span class="delete-bloc" (click)="onDeleteBlock(l)"> Supprimer le bloc</span>
+                 <button class="delete-bloc" (click)="onDeleteBlock(l)"> Supprimer le bloc</button>
                 <div class="input-contain">
                     <label for="contentBlockTitle{{l}}">Title du bloc</label><br>
                     <input id="'contentBlockTitle{{l}}'" formControlName="title" type="text" class="content-bloc-title"/>
@@ -32,7 +32,7 @@
                         <div class="input-contain">
                             <label for="value{{j}}">
                                 @if (content.get('type')?.value === 'text') {
-                                    Paragraphe
+                                    Ajouter votre text
                                 }@else if (content.get('type')?.value === 'image') {
                                     Image
                                 }@else {
@@ -40,8 +40,11 @@
                                 }
                             </label><br>
 
-                            <input *ngIf="content.get('type')?.value === 'image'"  type="file" name="file" 
-                             accept="image/*" class="image-upload-input" id="value{{j}}" (change)="onFileChange($event, l, j)">
+                            <div *ngIf="content.get('type')?.value === 'image'">
+                                <input   type="file" name="file" 
+                                accept="image/*" class="image-upload-input" id="value{{j}}" (change)="onFileChange($event, l, j)">
+                                <img *ngIf="content.get('value')?.value" [src]="content.get('value')?.value" class="form-image">
+                            </div>
 
                             <textarea *ngIf="content.get('type')?.value === 'text'" formControlName="value" id="value{{j}}"
                             placeholder="Ajouter votre paragraphe"></textarea>
@@ -60,7 +63,7 @@
             <button class="add-bloc" (click)="addContentBlock()">Ajouter un bloc</button>
         </div>
         <div>
-            <button type="submit" (click)="onSubmitForm()" [disabled]="postForm.invalid">{{ post ? 'Modifier' : 'Ajouter' }}</button>
+            <button type="submit" (click)="onSubmitForm(); isUpdated = false" [disabled]="postForm.invalid">{{ post ? 'Modifier' : 'Ajouter' }}</button>
             <button *ngIf="post" (click)="onDeletePost(post.code)" class="deleteBtn">Supprimer</button>
         </div>
     </form>  

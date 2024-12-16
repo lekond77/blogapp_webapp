@@ -1,11 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { catchError } from 'rxjs';
 import { Post } from 'src/app/model/post';
 import { PostService } from 'src/app/service/post.service';
-import { tap, of } from 'rxjs';
-import { NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
+import { tap, of, catchError } from 'rxjs';
+import { NgFor, NgIf, NgStyle } from '@angular/common';
 import { Content } from 'src/app/model/content';
 
 @Component({
@@ -20,6 +19,7 @@ export class PostFormComponent implements OnInit {
   formFeedback!: string | undefined; // Feedback message for form submission
   actionText!: string; // Text to indicate the action performed (e.g., added, modified)
   backgroundColor!:string;
+  isUpdated!:false;
 
   constructor(
     private fb: FormBuilder, 
@@ -46,16 +46,6 @@ export class PostFormComponent implements OnInit {
       });
     }
   }
-
-  // Initialize the form with default values and validators
-  private initForm(): void {
-    this.postForm = this.fb.group({
-      title: ['', [Validators.required]], 
-      description: ['', [Validators.required]],
-      contentBlock: this.fb.array([]) // Content blocks array to hold multiple content blocks
-    });
-  }
-
   // Prefill the form with the data of an existing post
   prefillForm(post: Post): void {
     // Set the title and description fields with the post data
@@ -85,6 +75,15 @@ export class PostFormComponent implements OnInit {
     }
   }
 
+  // Initialize the form with default values and validators
+  private initForm(): void {
+    this.postForm = this.fb.group({
+      title: ['', [Validators.required]], 
+      description: ['', [Validators.required]],
+      contentBlock: this.fb.array([]) // Content blocks array to hold multiple content blocks
+    });
+  }
+
   // Getter for the content blocks form array
   get contentBlocks(): FormArray {
     return this.postForm.get('contentBlock') as FormArray;
@@ -112,7 +111,8 @@ export class PostFormComponent implements OnInit {
     // Add a new content group to the contents array
     contentsArray.push(this.fb.group({
       type: [content?.type || 'text', Validators.required], 
-      value: [content?.value || '', Validators.required] 
+      value: [content?.value || '', Validators.required],
+      file:['']
     }));
   }
 
@@ -122,7 +122,7 @@ export class PostFormComponent implements OnInit {
     // Add a new content group to the contents array
     contentsArray.push(this.fb.group({
       type: ['text', Validators.required], 
-      value: [''],
+      value: ['', Validators.required],
       file:[''] 
     }));
   }
@@ -151,34 +151,31 @@ export class PostFormComponent implements OnInit {
     if (this.postForm.valid) {
       const postData = this.postForm.value; // Get the form data
 
+      const files: File[] = [];
+      const fileIndices: number[] = [];
+
+      this.contentBlocks.controls.forEach((block, blockIndex) => {
+        const contentBlock = block.get('contents') as FormArray;
+        contentBlock.controls.forEach((content, contentIndex) => {
+          if (content.get('file')?.value) {
+              files.push(content.get('file')?.value);
+              fileIndices.push(contentIndex);
+          }
+        });
+      });
+
+      console.log(files, fileIndices)
       let request;
 
       // Determine if we're updating an existing post or creating a new one
       if (this.post) {
-        request = this.postService.updatePost(this.post.code, postData);
+        request = this.postService.updatePost(this.post.code, postData, files, fileIndices);
         this.actionText = 'modifié'; // Set the action text to 'Modifié'
       } else {
-        const files: File[] = [];
-
-        this.contentBlocks.controls.forEach((block, blockIndex) => {
-          
-          const contentBlock = block.get('contents') as FormArray;
-          contentBlock.controls.forEach((content, contentIndex) => {
-            if (content.get('file')?.value) {
-              files.push(content.get('file')?.value);
-            }
-          });
-        });
-
-        console.log(files);
-
-        request = this.postService.createPost(postData, files);
-        //request = this.postService.createPost(postData);
+        request = this.postService.createPost(postData, files, fileIndices);
         this.actionText = 'ajouté'; // Set the action text to 'Ajouté'
-        //this.initForm(); // Reset the form after creating a new post
       }
 
-      
       // Subscribe to the request to handle the response
       request.pipe(
         tap((post) => {
@@ -198,7 +195,10 @@ export class PostFormComponent implements OnInit {
 
   // Delete a post by code and navigate to the home page
   onDeletePost(code: string) {
-    this.postService.deletePost(code).subscribe();
-    this.router.navigateByUrl('');
+    this.postService.deletePost(code).subscribe(
+      ()=>{
+        this.router.navigateByUrl('');
+      }
+    );
   }
 }
