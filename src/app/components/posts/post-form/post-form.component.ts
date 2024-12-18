@@ -20,6 +20,7 @@ export class PostFormComponent implements OnInit {
   actionText!: string; // Text to indicate the action performed (e.g., added, modified)
   backgroundColor!:string;
   isUpdated!:false;
+  isCollapsed: boolean[] = [];
 
   constructor(
     private fb: FormBuilder, 
@@ -28,6 +29,8 @@ export class PostFormComponent implements OnInit {
     private router: Router
   ) {
     this.initForm(); // Initialize the form when the component is created
+
+    this.isCollapsed = this.contentBlocks.controls.map(() => false);
   }
 
   ngOnInit(): void {
@@ -111,7 +114,7 @@ export class PostFormComponent implements OnInit {
     // Add a new content group to the contents array
     contentsArray.push(this.fb.group({
       type: [content?.type || 'text', Validators.required], 
-      value: [content?.value || '', Validators.required],
+      value: [content?.value || ''],
       file:['']
     }));
   }
@@ -122,7 +125,7 @@ export class PostFormComponent implements OnInit {
     // Add a new content group to the contents array
     contentsArray.push(this.fb.group({
       type: ['text', Validators.required], 
-      value: ['', Validators.required],
+      value: [''],
       file:[''] 
     }));
   }
@@ -163,8 +166,6 @@ export class PostFormComponent implements OnInit {
           }
         });
       });
-
-      console.log(files, fileIndices)
       let request;
 
       // Determine if we're updating an existing post or creating a new one
@@ -178,10 +179,10 @@ export class PostFormComponent implements OnInit {
 
       // Subscribe to the request to handle the response
       request.pipe(
-        tap((post) => {
+        tap((post:Post) => {
           // Set the feedback message with the action text
           this.formFeedback = `Post ${this.actionText} avec succès`;
-          this.backgroundColor = 'green'
+          this.backgroundColor = 'green';
           this.post = post; // Update the post data
         }),
         catchError((error) => {
@@ -196,9 +197,14 @@ export class PostFormComponent implements OnInit {
   // Delete a post by code and navigate to the home page
   onDeletePost(code: string) {
     this.postService.deletePost(code).subscribe(
-      ()=>{
+      () => {
         this.router.navigateByUrl('');
       }
     );
   }
+
+  toggleCollapse(index: number) {
+    this.isCollapsed[index] = !this.isCollapsed[index];
+  }
+  
 }
