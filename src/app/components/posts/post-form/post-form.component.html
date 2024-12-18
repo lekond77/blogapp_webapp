@@ -11,51 +11,59 @@
         </div>
 
         <div formArrayName="contentBlock" >
+
             <div *ngFor="let contentBlock of contentBlocks.controls; let l=index" class="content-bloc"
                  [formGroupName]="l">
-                 <button class="delete-bloc" (click)="onDeleteBlock(l)"> Supprimer le bloc</button>
+
+                <span (click)="toggleCollapse(l)" class="collapse-btn">
+                    {{ isCollapsed[l] ? '+' : '-'}}
+                </span>
+
                 <div class="input-contain">
                     <label for="contentBlockTitle{{l}}">Title du bloc</label><br>
                     <input id="'contentBlockTitle{{l}}'" formControlName="title" type="text" class="content-bloc-title"/>
                 </div>
-                <div formArrayName="contents" >
-                    <div *ngFor="let content of getContents(l).controls; let j = index" [formGroupName]="j" class="content">
-                        <span class="delete-content" (click)="onDeleteContent(l,j)"> Supprimer</span>
-                        <div class="input-contain">
-                            <label for="type">Type</label><br>
-                            <select formControlName="type">
-                                <option value="text">Text</option>
-                                <option value="image">Image</option>
-                                <option value="list">List d'éléments</option>
-                            </select>
-                        </div>
-                        <div class="input-contain">
-                            <label for="value{{j}}">
-                                @if (content.get('type')?.value === 'text') {
-                                    Ajouter votre text
-                                }@else if (content.get('type')?.value === 'image') {
-                                    Image
-                                }@else {
-                                    List
-                                }
-                            </label><br>
+                <button class="delete-btn" (click)="onDeleteBlock(l)"> Supprimer le bloc</button>
 
-                            <div *ngIf="content.get('type')?.value === 'image'">
-                                <input   type="file" name="file" 
-                                accept="image/*" class="image-upload-input" id="value{{j}}" (change)="onFileChange($event, l, j)">
-                                <img *ngIf="content.get('value')?.value" [src]="content.get('value')?.value" class="form-image">
+                <div *ngIf="!isCollapsed[l]" [class.collapsed]="isCollapsed[l]" [class.expanded]="!isCollapsed[l]">
+                   
+                    <div formArrayName="contents" >
+                        <div *ngFor="let content of getContents(l).controls; let j = index" [formGroupName]="j" class="content">
+                            <span class="delete-content" (click)="onDeleteContent(l,j)"> Supprimer</span>
+                            <div class="input-contain">
+                                <label for="type">Type</label><br>
+                                <select formControlName="type">
+                                    <option value="text">Text</option>
+                                    <option value="image">Image</option>
+                                    <option value="list">List d'éléments</option>
+                                </select>
                             </div>
+                            <div class="input-contain">
+                                <label for="value{{j}}">
+                                    @if (content.get('type')?.value === 'text') {
+                                        Ajouter votre text
+                                    }@else if (content.get('type')?.value === 'image') {
+                                        Image
+                                    }@else {
+                                        List
+                                    }
+                                </label><br>
 
-                            <textarea *ngIf="content.get('type')?.value === 'text'" formControlName="value" id="value{{j}}"
-                            placeholder="Ajouter votre paragraphe"></textarea>
-    
-                            <textarea *ngIf="content.get('type')?.value === 'list'" formControlName="value" id="value{{j}}"
-                            placeholder="Entrez les éléments de la liste (séparés par des points virgules)"></textarea>
+                                <div *ngIf="content.get('type')?.value === 'image'">
+                                    <input   type="file" name="file" 
+                                    accept="image/*" class="image-upload-input" id="value{{j}}" (change)="onFileChange($event, l, j)">
+                                    <img *ngIf="content.get('value')?.value" [src]="content.get('value')?.value" class="form-image">
+                                </div>
 
+                                <textarea *ngIf="content.get('type')?.value === 'text'" formControlName="value" id="value{{j}}"
+                                placeholder="Ajouter votre paragraphe"></textarea>
+        
+                                <textarea *ngIf="content.get('type')?.value === 'list'" formControlName="value" id="value{{j}}"
+                                placeholder="Entrez les éléments de la liste (séparés par des points virgules)"></textarea>
+                            </div>      
                         </div>
-                        
+                        <button class="add-content" (click)="addContent(l)">Ajouter du contenu</button>
                     </div>
-                    <button class="add-content" (click)="addContent(l)">Ajouter du contenu</button>
                 </div>
             </div>
         </div>
