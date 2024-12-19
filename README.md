@@ -17,15 +17,15 @@ This is the frontend application for the Blogging App, built with Angular. It al
   <tr>
     <td>
       <img src="https://github.com/user-attachments/assets/5d5bed77-7a43-45e8-8e86-722c7efe1e78" alt="All blog posts" width="300" height="300"/> <br>
-      <em>Description: All blog posts.</em>
+      <em>All blog posts.</em>
     </td>
     <td>
       <img src="https://github.com/user-attachments/assets/b2cc5d4a-7860-4849-b5c5-14e9dfd86c85" alt="Add new blog posts" width="300" height="300"/> <br>
-      <em>Description: Add new blog posts.</em>
+      <em>Add new blog posts.</em>
     </td>
     <td>
       <img src="https://github.com/user-attachments/assets/f1485efc-c94e-4b24-95a4-64968dd0c36a" alt="Edit existing blog posts" width="300" height="300"/><br>
-      <em>Description: Edit existing blog posts.</em>
+      <em>Edit existing blog posts.</em>
     </td>
   </tr>
 </table>
