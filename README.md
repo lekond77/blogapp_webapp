@@ -1,27 +1,94 @@
-# Bloggingapp
+# Bloggingapp  Frontend
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.3.
+This is the frontend application for the Blogging App, built with Angular. It allows users to create, edit, and delete blog posts by communicating with the backend API.
 
-## Development server
+## Features
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- Create new blog posts
+- Edit existing blog posts
+- Delete blog posts
+- View all blog posts
 
-## Code scaffolding
+## Technologies Used
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- Angular 19
+- TypeScript
+- HTML
+- CSS
 
-## Build
+## Getting Started
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### Prerequisites
 
-## Running unit tests
+- Node.js
+- Angular CLI
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### Installation
 
-## Running end-to-end tests
+1. Clone the repository:
+     git clone https://github.com/lekond77/blogapp_webapp.git
+2. Navigate to project
+     cd blogapp_webapp
+3. Install dependencies
+     npm install
+4. The frontend communicates with the backend (Spring Boot API). 
+Configure API endpoints in the : **/src/app/config/api.config.ts**
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+### Running the Application
+     ng s --o
 
-## Further help
+## Api Repository
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Appi repository available here : 
+     https://github.com/lekond77/blogapp_api
+
+--- **Don't forget to star this repository and follow me if you found it useful! I would love to check out your repositories too.** 🌟😄
+
+
+
+
+Ceci est l'application frontend pour l'application de blog, construite avec Angular. Elle permet aux utilisateurs de créer, éditer et supprimer des articles de blog en communiquant avec l'API backend.
+
+## Fonctionnalités
+
+- Créer de nouveaux articles de blog
+- Éditer des articles de blog existants
+- Supprimer des articles de blog
+- Voir tous les articles de blog
+
+## Technologies Utilisées
+
+- Angular 19
+- TypeScript
+- HTML
+- CSS
+
+## Prise en Main
+
+### Prérequis
+
+- Node.js
+- Angular CLI
+
+### Installation
+
+1. Clonez le dépôt :
+   git clone https://github.com/lekond77/blogapp_webapp.git
+
+2. Naviguer dans le projet
+     cd blogapp_webapp
+3. Installer les dépendences
+     npm install
+4. Le frontend communique avec le backend (Spring Boot API). 
+Configurer l'adresse de l'API dans le fichier : **/src/app/config/api.config.ts**
+
+### Démarrer le serveur et ouvrir l'application
+     ng s --o
+
+## dépôt de l'Api
+
+Le dépôt de l'API est disponible ici :
+     https://github.com/lekond77/blogapp_api
+
+--- *** N'oublie pas de mettre une étoile à ce répertoire et de me suivre si tu l'as trouvé utile ! J'adorerais aussi découvrir tes répertoires.** 🌟😄
+
