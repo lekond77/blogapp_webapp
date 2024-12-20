@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Post } from '../model/post';
 import { API_CONFIG } from '../config/api.config';
+import { Comment } from '../model/comment';
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +49,12 @@ export class PostService {
   //Delete post by id
   deletePost(code:string):Observable<any>{
     return this.http.delete<Post>(`${this.apiUrl}/post/${code}`);
+  }
+
+  //Add comment to post
+
+  addCommentToPost(code:string, comment:Comment):Observable<Comment>{
+    return this.http.put<Comment>(`${this.apiUrl}/post/comment/${code}`, comment);
   }
 
   private postFormData(post:Post, files:File[], fileIndices:number[]):FormData{
