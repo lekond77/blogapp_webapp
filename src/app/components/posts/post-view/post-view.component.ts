@@ -1,8 +1,8 @@
-import { AsyncPipe, CommonModule, NgFor, NgIf } from '@angular/common';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormArray, Validators, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { catchError, of, tap } from 'rxjs';
 import { Comment } from 'src/app/model/comment';
 import { Post } from 'src/app/model/post';
 import { SplitBySemicolonPipe } from 'src/app/pipe/splitbysemicolon.pipe';
@@ -15,7 +15,7 @@ import { PostService } from 'src/app/service/post.service';
   styleUrl: './post-view.component.css'
 })
 export class PostViewComponent implements OnInit{
-  
+
   code!:string;
   commentForm!:FormGroup;
   post!:Post;
@@ -34,29 +34,28 @@ export class PostViewComponent implements OnInit{
       (post:Post)=>{
         this.post = post;
       }
-     
     );
   }
 
-    initForm(){
-     this.commentForm = this.fb.group({
-        pseudo:['', Validators.required],
-        comment:['', Validators.required]
-      })
-    }
+  initForm(){
+    this.commentForm = this.fb.group({
+      pseudo:['', Validators.required],
+      comment:['', Validators.required]
+    })
+  }
 
-    onSubmit(){
-      if(this.commentForm.valid){
-        this.postService.addCommentToPost(this.code, this.commentForm.value).subscribe(
-          (comment:Comment)=>{
-            this.post.comments?.unshift(comment);
-            this.commentForm.reset();
-          },
-          error =>{
-            this.error = "Une erreur s'est produite lors de l'ajout du commentaire";
-          }
-        );
-
-      }
+  onSubmit(){
+    if(this.commentForm.valid){
+      this.postService.addCommentToPost(this.code, this.commentForm.value).pipe(
+        tap((comment:Comment)=>{
+          this.post.comments?.unshift(comment);
+          this.commentForm.reset();
+        })),
+        catchError((error) =>{
+          this.error = "Une erreur s'est produite lors de l'ajout du commentaire";
+          return of(null);
+        }
+      ) 
     }
+  }
 }
