@@ -5,4 +5,5 @@ export class Post{
     description!:string;
     contentBlock!:ContentBlock[];
     date!:Date;
+    comments?:Comment[];
 }
