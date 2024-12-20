@@ -83,7 +83,8 @@ export class PostFormComponent implements OnInit {
     this.postForm = this.fb.group({
       title: ['', [Validators.required]], 
       description: ['', [Validators.required]],
-      contentBlock: this.fb.array([]) // Content blocks array to hold multiple content blocks
+      contentBlock: this.fb.array([]), // Content blocks array to hold multiple content blocks
+      comments:this.fb.array([])
     });
   }
 

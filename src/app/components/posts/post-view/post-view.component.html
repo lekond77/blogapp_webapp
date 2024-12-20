@@ -1,4 +1,4 @@
-<div *ngIf="post$|async as post">
+<div *ngIf="post">
     <h2>{{ post.title }}</h2>
     <p>{{ post.description }}</p>
 
@@ -17,5 +17,30 @@
                </div>
             </div>
         </div>
+    </div>
+
+    <div class="post-comment">
+       <h3>Commentaires</h3>
+       <div *ngIf="error" class="error">{{ error }}</div>
+       <form [formGroup]="commentForm" (submit)="onSubmit()">
+            <div class="pseudo">
+                <label for="pseudo">Pseudonyme:</label><br>
+                <input type="text" id="pseudo" formControlName="pseudo">
+            </div>
+            <div class="comment-value">
+                <label for="comment" id="comment">Commentaire:</label><br>
+                <textarea id="comment" formControlName="comment" rows="5"></textarea>
+            </div>
+            <button type="submit" class="add-comment" [disabled]="commentForm.invalid">Ajouter commentaire</button>
+       </form>
+
+       <div class="comments">
+        <div class="comment" *ngFor="let comment of post.comments">
+          <div class="comment-header">
+            <strong>{{ comment.pseudo }}</strong> <span class="comment-date">{{ comment.date | date:'short' }}</span>
+          </div>
+          <p class="comment-text">{{ comment.comment }}</p>
+        </div>
+      </div>
     </div>
 </div>
